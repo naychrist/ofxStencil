@@ -20,10 +20,12 @@ public:
     ofxStencil(){}  
     
     //set up to draw stencil  
-    void beginDrawingStencil() {  
+    void beginDrawingStencil() {
+        glClearStencil(0);
         glClear(GL_STENCIL_BUFFER_BIT);  
         glEnable(GL_STENCIL_TEST); //Enable using the stencil buffer  
-        glColorMask(0, 0, 0, 0); //Disable drawing colors to the screen  
+        glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE); //Disable drawing colors to the screen
+        glDepthMask(GL_FALSE); //Disable drawing to depth buffer
         glStencilFunc(GL_ALWAYS, 1, 1); //Make the stencil test always pass  
         //Make pixels in the stencil buffer be set to 1 when the stencil test passes  
         glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);  
@@ -32,9 +34,10 @@ public:
     
     //switch from drawing stencil to scene to be masked  
     void beginUsingStencil() {  
-        glColorMask(1, 1, 1, 1); //Enable drawing colors to the screen  
+        glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE); //Enable drawing colors to the screen
+        glDepthMask(GL_TRUE); //Eable drawing to depth buffer
         //Make the stencil test pass only when the pixel is 1 in the stencil buffer  
-        glStencilFunc(GL_EQUAL, 1, 1);  
+        glStencilFunc(GL_EQUAL, 1, 1);
         glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); //Make the stencil buffer not change  
         //Draw all pixels where the stencil buffer is 1...  
     }  
